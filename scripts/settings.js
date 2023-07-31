@@ -10,8 +10,6 @@ export class ModuleSettings {
 			this.MODULE_NAME,
 			ModuleOptions.ENABLE_QUICK_ACCESS,
 			this._buildConfig(ModuleOptions.ENABLE_QUICK_ACCESS, {
-				default: false,
-				scope: "world",
 				onChange: () => {}
 			})
 		);

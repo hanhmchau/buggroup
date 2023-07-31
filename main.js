@@ -12,6 +12,7 @@ export const MODULE_ID = "buggroup";
 
 Hooks.once("init", () => {
 	preloadTemplates();
+	ModuleSettings.registerSettings();
 });
 
 Hooks.once("ready", () => {

@@ -1,0 +1,5 @@
+<div class="features list-layout">
+	<ul class="inventory-list features-list items-list {{#if actor.flags.tidy5e-sheet.allow-edit}}unlocked{{/if}}">
+		{{#each sections as |section sid|}} {{> "modules/buggroup/templates/qa-section.html" section=section}} {{/each}}
+	</ul>
+</div>

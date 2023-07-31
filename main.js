@@ -12,6 +12,9 @@ export const MODULE_ID = "buggroup";
 
 Hooks.once("init", () => {
 	preloadTemplates();
+});
+
+Hooks.on("setup", () => {
 	ModuleSettings.registerSettings();
 });
 
@@ -30,18 +33,21 @@ Hooks.once("ready", () => {
 				.flat();
 			// move Class and Background features to the bottom of the list
 			data.features = data.features.slice(2).concat(data.features.slice(0, 2));
-			orderedCategoryIds.forEach((categoryId) => {
-				const category = categories[categoryId];
-				if (category) {
-					data.features.unshift({
-						label: category.label,
-						hasActions: true,
-						isClass: false,
-						dataset: { type: "feat", categoryId, custom: true },
-						items: filteredFeatures.filter((item) => item.flags[MODULE_ID]?.categoryId === categoryId)
-					});
-				}
-			});
+			const orderedCustomCategories = orderedCategoryIds
+				.map((categoryId) => {
+					const category = categories[categoryId];
+					if (category) {
+						return {
+							label: category.label,
+							hasActions: true,
+							isClass: false,
+							dataset: { type: "feat", categoryId, custom: true },
+							items: filteredFeatures.filter((item) => item.flags[MODULE_ID]?.categoryId === categoryId)
+						};
+					}
+				})
+				.filter((cat) => cat); // remove null
+			data.features.unshift(...orderedCustomCategories);
 			// remove items already in custom categories from default Active/Passive categories
 			Constants.DEFAULT_CATEGORIES.forEach((label) => {
 				const category = data.features.find((cat) => cat.label === label);

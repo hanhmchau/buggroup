@@ -12,29 +12,24 @@ export default class Categories {
 	}
 
 	async create(newLabel) {
-		const existingCategories = this.actor.getFlag("buggroup", "categories") || {};
 		const generatedId = randomID();
-		const newCategories = {
-			...existingCategories,
-			[generatedId]: {
-				label: newLabel
-			}
-		};
 		const sortOrder = this.actor.getFlag("buggroup", "sortOrder") || [];
 		await this.actor.update({
 			flags: {
 				buggroup: {
-					sortOrder: [...sortOrder, generatedId],
-					categories: newCategories
+					sortOrder: [generatedId, ...sortOrder],
+					categories: {
+						[generatedId]: {
+							label: newLabel
+						}
+					}
 				}
 			}
 		});
 	}
 
 	async rename(id, newLabel) {
-		const existingCategories = this.actor.getFlag("buggroup", "categories") || {};
 		const newCategories = {
-			...existingCategories,
 			[id]: {
 				label: newLabel
 			}
@@ -114,6 +109,10 @@ export default class Categories {
 
 	getAll() {
 		return this.actor.getFlag("buggroup", "categories") || {};
+	}
+
+	get(id) {
+		return this.actor.getFlag("buggroup", `categories.${id}`);
 	}
 
 	getOrder() {

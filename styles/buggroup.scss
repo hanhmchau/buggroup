@@ -94,6 +94,11 @@
 	.item-name {
 		display: flex;
 		flex: 1;
+
+		.fa-dice-d20,
+		.item-quantity {
+			display: none;
+		}
 	}
 
 	> *:not(.item-name) {

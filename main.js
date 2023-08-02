@@ -7,6 +7,7 @@ import Renderer from "./scripts/Renderer.js";
 import QuickAccessTab from "./scripts/QuickAccessTab.js";
 import preloadTemplates from "./scripts/preload-templates.js";
 import { ModuleOptions, ModuleSettings } from "./scripts/settings.js";
+import Enhancer from "./scripts/Enhancer.js";
 
 export const MODULE_ID = "buggroup";
 
@@ -19,9 +20,11 @@ Hooks.on("setup", () => {
 });
 
 Hooks.once("ready", () => {
+	const tidyMethod = (method) => `CONFIG.Actor.sheetClasses.character['dnd5e.Tidy5eSheet'].cls.prototype.${method}`;
+	const baseMethod = (method) => `CONFIG.Actor.sheetClasses.character['dnd5e.ActorSheet5eCharacter'].cls.prototype.${method}`;
 	libWrapper.register(
 		MODULE_ID,
-		"CONFIG.Actor.sheetClasses.character['dnd5e.Tidy5eSheet'].cls.prototype.getData",
+		tidyMethod("getData"),
 		async function (wrapped) {
 			const data = await wrapped();
 			const service = new Categories(data.actor._id);
@@ -63,6 +66,18 @@ Hooks.once("ready", () => {
 		},
 		"WRAPPER"
 	);
+
+	libWrapper.register(
+		MODULE_ID,
+		baseMethod("_filterItems"),
+		function (wrapped, items, filters) {
+			return wrapped(items, filters).filter((item) => {
+				if (filters.has("non-concentration") && item.data.components.concentration) return false;
+				return true;
+			});
+		},
+		"WRAPPER"
+	);
 });
 
 Hooks.on("createItem", (item) => {
@@ -83,6 +98,8 @@ Hooks.on("renderTidy5eSheet", async (app, html, data) => {
 		if (quickAccessEnabled) await initializeQuickAccessTab(data.actor._id, html, app);
 		restoreAllTabsPosition(app);
 		renderer.configureDraggable();
+		const enhancer = new Enhancer(data.actor._id, app);
+		enhancer.enhance();
 	}
 });
 

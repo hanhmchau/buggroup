@@ -1,3 +1,5 @@
+import { Constants } from "./Categories.js";
+
 export default class Sorter {
 	constructor(actor) {
 		this.actor = actor;

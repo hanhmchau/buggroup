@@ -32,9 +32,10 @@ export default class Renderer {
 
 	configureDraggableItems() {
 		const $itemList = $(".features-header.dragzone").next(".item-list");
-		$itemList.find(".item").removeAttr("draggable");
+		const dragHandler = $('<a class="drag-handler"><i class="buggicon draggy"></i></a>');
+		$itemList.find(".item").prepend(dragHandler);
 		dragula($itemList.toArray(), {
-			moves: (el) => $(el).hasClass("item"),
+			moves: (el, source, handle, sibling) => $(el).hasClass("item") && handle.closest(".drag-handler"),
 			accepts: (el, target, source, sibling) => sibling != null
 		}).on("drop", async (el, target, source, sibling) => {
 			const itemId = $(el).attr("data-item-id");

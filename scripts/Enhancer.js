@@ -13,12 +13,12 @@ export default class Enhancer {
 	}
 
 	async useEnhancedDragDrop() {
-		const $tabs = $(".tab.inventory, .tab.spellbook");
-		$tabs.find(".item[draggable=true]").removeAttr("draggable");
-		const $containers = $tabs.find(".item-list");
+		const $containers = $(".tab.inventory, .tab.spellbook").find(".item-list");
+		const dragHandler = $('<a class="drag-handler"><i class="buggicon draggy"></i></a>');
+		$containers.find(".item").prepend(dragHandler);
 
 		dragula($containers.toArray(), {
-			moves: (el) => $(el).hasClass("item"),
+			moves: (el, source, handle, sibling) => $(el).hasClass("item") && handle.closest(".drag-handler"),
 			accepts: (el, target, source, sibling) => sibling != null && target == source
 		}).on("drop", async (el, target, source, sibling) => {
 			const itemId = $(el).attr("data-item-id");

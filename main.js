@@ -88,6 +88,10 @@ Hooks.on("createItem", (item) => {
 	}
 });
 
+Hooks.on("renderHotbar", (hotbar, html, data) => {
+	highlightDroppable();
+});
+
 Hooks.on("renderTidy5eSheet", async (app, html, data) => {
 	const quickAccessEnabled = ModuleSettings.getSetting(ModuleOptions.ENABLE_QUICK_ACCESS);
 	if (data.isCharacter) {
@@ -111,7 +115,6 @@ function injectQuickAccessTabIntoSheetData(app) {
 	if (!app.options.scrollY.includes(".quick-access .inventory-list")) {
 		app.options.scrollY.push(".quick-access .inventory-list");
 	}
-	// app._filters["quick-access"] = app._filters["quick-access"] || new Set();
 }
 
 async function initializeQuickAccessTab(actorId, html, app) {
@@ -134,4 +137,14 @@ function addDataTypeToItemHeaders(html) {
 			$(itemHeader).next(".item-list").addBack().wrapAll(`<ul class="items-wrapper" data-type="${dataType}"></ul>`);
 		}
 	});
+}
+
+function highlightDroppable() {
+	$("#hotbar")
+		.on("dragenter dragover", ".macro", function (ev) {
+			$(this).addClass("dragover");
+		})
+		.on("dragleave drop", ".macro", function (ev) {
+			$(this).removeClass("dragover");
+		});
 }

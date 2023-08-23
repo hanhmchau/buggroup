@@ -59,7 +59,10 @@ Hooks.once("ready", () => {
 						...category.dataset,
 						categoryId: label
 					};
-					category.items = category.items.filter((cat) => !cat.flags?.buggroup?.categoryId);
+					category.items = category.items.filter((cat) => {
+						const categoryId = cat.flags?.buggroup?.categoryId;
+						return !categoryId || categoryId === label;
+					});
 				}
 			});
 			return data;
@@ -102,7 +105,7 @@ Hooks.on("renderTidy5eSheet", async (app, html, data) => {
 		if (quickAccessEnabled) await initializeQuickAccessTab(data.actor._id, html, app);
 		restoreAllTabsPosition(app);
 		renderer.configureDraggable();
-		const enhancer = new Enhancer(data.actor._id, app);
+		const enhancer = new Enhancer(data.actor._id, app, html);
 		enhancer.enhance();
 	}
 });

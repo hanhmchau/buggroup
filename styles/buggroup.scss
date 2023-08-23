@@ -88,13 +88,12 @@
 	font-weight: 400;
 }
 
-.custom-categories {
-	margin-bottom: 0.75rem !important;
+.items-wrapper,
+.category-wrapper {
+	margin-bottom: 0.6rem !important;
 }
 
 .category-wrapper {
-	margin-top: 8px !important;
-
 	.features-header {
 		.category-header {
 			display: flex;

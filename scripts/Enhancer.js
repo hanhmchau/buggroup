@@ -1,10 +1,11 @@
 import Sorter from "./Sorter.js";
 
 export default class Enhancer {
-	constructor(actorId, app) {
+	constructor(actorId, app, html) {
 		this.actor = game.actors.get(actorId);
 		this.sorter = new Sorter(this.actor);
 		this.sheet = app;
+		this.html = html;
 	}
 
 	async enhance() {
@@ -13,7 +14,7 @@ export default class Enhancer {
 	}
 
 	async useEnhancedDragDrop() {
-		const $containers = $(".tab.inventory, .tab.spellbook").find(".item-list");
+		const $containers = $(this.html).find(".tab.inventory, .tab.spellbook").find(".item-list");
 		const dragHandler = $('<a class="drag-handler"><i class="buggicon draggy"></i></a>');
 		$containers.find(".item").prepend(dragHandler);
 
@@ -28,7 +29,7 @@ export default class Enhancer {
 	}
 
 	async addNonConcentrationFilter() {
-		const $filter = $(".filter-list[data-filter=spellbook]");
+		const $filter = $(this.html).find(".filter-list[data-filter=spellbook]");
 		const $concentrationFilter = $filter.find(".filter-item[data-filter=concentration]");
 		const filterActive = this.sheet._filters.spellbook.has("non-concentration");
 		const $nonConcentrationFilter = $(`<li class="filter-item ${filterActive ? "active" : ""}" data-filter="non-concentration">Non-conc.</li>`);

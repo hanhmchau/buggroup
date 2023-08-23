@@ -19,7 +19,7 @@ export default class Renderer {
 	}
 
 	configureDraggableCategories() {
-		const $categories = $(".custom-categories");
+		const $categories = $(this.html).find(".custom-categories");
 		$categories.find("features-header").addClass("draggable");
 		dragula($categories.toArray(), {
 			moves: (el, container, handle) => $(handle).closest(".features-header").length > 0
@@ -31,7 +31,7 @@ export default class Renderer {
 	}
 
 	configureDraggableItems() {
-		const $itemList = $(".features-header.dragzone").next(".item-list");
+		const $itemList = $(this.html).find(".features-header.dragzone").next(".item-list");
 		const dragHandler = $('<a class="drag-handler"><i class="buggicon draggy"></i></a>');
 		$itemList.find(".item").prepend(dragHandler);
 		dragula($itemList.toArray(), {
